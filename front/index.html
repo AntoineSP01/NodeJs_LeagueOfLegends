@@ -1,49 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form onsubmit="event.preventDefault(); sendChampion()">         
-        <input type="text" name="champion" placeholder="Nom">         
-        <input type="text" name="typeChampion" placeholder="Type">         
-        <button type="submit">New Champion</button>     
-    </form>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <form onsubmit="event.preventDefault(); sendChampion()">
+            <input type="text" name="champion" placeholder="Nom" />
+            <input type="text" name="typeChampion" placeholder="Type" />
+            <button type="submit">New Champion</button>
+        </form>
+        <br />
+        <button onclick="ajoutChampionToBdd()">
+            Importer des champions
+        </button>
 
-    <h1>Liste Champions</h1>
-    <div id="champions"></div>
+        <h1>Liste Champions</h1>
+        <div id="champions"></div>
 
-    <script>
-        fetch('http://localhost:3000/champions')
-        .then((response) => response.json())
-        .then((data) => {
-            let champions = document.querySelector('#champions')
-            data.forEach(champion => {
-                champions.innerHTML += `
+        <script>
+            fetch("http://localhost:3000/champions")
+                .then((response) => response.json())
+                .then((data) => {
+                    let champions = document.querySelector("#champions");
+                    data.forEach((champion) => {
+                        champions.innerHTML += `
                     <h2><a href="champion.html?id=${champion.id}">${champion.name}<a></h2>
                     <p>${champion.type}</p>
-                `
-            })
-        })
+                `;
+                    });
+                });
 
-        const sendChampion = async () => {
-                event.preventDefault()
-                let champion = document.querySelector('input[name="champion"]').value
-                let type = document.querySelector('input[name="typeChampion"]').value
-                await fetch('http://localhost:3000/champions', {
-                    method: 'POST',
+            const sendChampion = async () => {
+                event.preventDefault();
+                let champion = document.querySelector(
+                    'input[name="champion"]'
+                ).value;
+                let type = document.querySelector(
+                    'input[name="typeChampion"]'
+                ).value;
+                await fetch("http://localhost:3000/champions", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
                         name: champion,
-                        type
-                    })
-                })
-                window.location.href = 'index.html'
-            }
-    </script>
-</body>
+                        type,
+                    }),
+                });
+                window.location.href = "index.html";
+            };
+
+            const ajoutChampionToBdd = async () => {
+                try {
+                    await fetch("http://localhost:3000/champions/importChampion", {
+                        method: "POST",
+                    });
+                    window.location.href = "index.html";
+                } catch (error) {
+                    console.error('Error importing champions:', error);
+                    alert('Failed to import champions. Please try again later.');
+                }
+            };
+        </script>
+    </body>
 </html>
