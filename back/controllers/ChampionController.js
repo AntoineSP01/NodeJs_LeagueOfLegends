@@ -12,13 +12,50 @@ const getChampions = (req, res) => {
         });
 };
 
-const getChampion = (req, res) => {};
+const getChampion = (req, res) => {
+    let id = Number(req.params.id);
+
+    prisma.champion
+        .findUnique({
+            where: {
+                id: id,
+            },
+        })
+        .then((champion) => {
+            res.json(champion);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+};
 
 const createChampion = (req, res) => {
     let champion = req.body;
     console.log(champion);
     prisma.champion
         .create({
+            data: {
+                name: champion.name,
+                type: champion.type,
+            },
+        })
+        .then((champion) => {
+            res.json(champion);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+};
+
+const updateChampion = (req, res) => {
+    let id = Number(req.params.id);
+    let champion = req.body;
+
+    prisma.champion
+        .update({
+            where: {
+                id: id,
+            },
             data: {
                 name: champion.name,
                 type: champion.type
@@ -32,9 +69,22 @@ const createChampion = (req, res) => {
         });
 };
 
-const updateChampion = (req, res) => {};
+const deleteChampion = (req, res) => {
+    let id = Number(req.params.id)
 
-const deleteChampion = (req, res) => {};
+    prisma.champion
+        .delete({
+            where: {
+                id: id,
+            },
+        })
+        .then((champion) => {
+            res.json(champion);
+        })
+        .catch((error) => {
+            res.json(error);
+        });
+};
 
 export {
     getChampions,

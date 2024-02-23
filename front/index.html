@@ -22,7 +22,7 @@
             let champions = document.querySelector('#champions')
             data.forEach(champion => {
                 champions.innerHTML += `
-                    <h2>${champion.name}</h2>
+                    <h2><a href="champion.html?id=${champion.id}">${champion.name}<a></h2>
                     <p>${champion.type}</p>
                 `
             })
